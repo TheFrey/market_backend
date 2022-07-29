@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}My shop{% endblock %}</title>
+    <link href="{% static "css/base.css" %}" rel="stylesheet">
+</head>
+<body>
+<div id="header">
+    <a href="/" class="logo">My shop</a>
+</div>
+<div id="subheader">
+
+    <div class="login">
+    {% if request.user.is_authenticated %}
+        <h4>Hello {{ request.user.get_username }} </h4>
+        <a href="{%  url "market:logout" %}">Logout</a>
+    {% else %}
+        <h4>Login or registration</h4>
+        <p><a href="{%  url "market:login" %}">Login</a>  <a href="{%  url "market:register" %}">Registration</a></p>
+    {% endif %}
+    </div>
+    <div class="cart">
+    {% with total_items=cart|length %}
+        {% if cart|length > 0 %}
+            Your cart:
+            <a href="{% url "cart:cart_detail" %}">
+                {{ total_items }} item{{ total_items|pluralize }},
+                ${{ cart.get_total_price }}
+            </a>
+        {% else %}
+            Your cart is empty.
+        {% endif %}
+    {% endwith %}
+    </div>
+    <div class="search"><a href="{% url "market:product_search" %}">Search</a></div>
+</div>
+<div id="content">
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>
